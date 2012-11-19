@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>MIDTERM GUESTBOOK</title>
+        <link href='http://fonts.googleapis.com/css?family=BenchNine:400,700,300' rel='stylesheet' type='text/css'></link>
+    
+        <style>
+            body {
+                font-family: 'BenchNine', sans-serif;
+                width: 1000px;
+            }
+
+            .bl {
+                border-left: 1px solid #000;
+                padding-left: 15px;
+            }
+
+            .email input {
+                width: 320px!important;
+            }
+
+            .form-element {
+                position: relative;
+                float: left;
+                padding-right: 5px;
+            }
+
+            .form-error {
+                color: #C00;
+            }
+
+            .form-error ul {
+                padding-left: 5px;
+            }
+
+            .form-input input {
+                color: #555;
+                width: 100px;
+            }
+
+            .form-input textarea {
+                height: 100px;
+                width: 320px;
+            }
+
+            .form-label {
+                color: #777;
+            }
+
+            .form-section {
+                position: relative;
+                float: left;
+                padding-bottom: 15px;
+                width: 100%;
+            }
+            
+            .header-date {
+                width: 120px;
+            }
+            
+            .header-name {
+                width: 100px;
+            }
+
+            .left {
+                position: relative;
+                float: left;
+                width: 644px;
+            }
+            
+            .link-email {
+                color: #555;
+                font-size: 10pt;
+                text-decoration: none;
+            }
+
+            .note {
+                color: #999;
+                font-size: 10pt;
+            }
+
+            .page-title {
+                text-align: center;
+            }
+
+            .required {
+                color: #F00;
+            }
+
+            .right {
+                position: relative;
+                float: left;
+                width: 340px;
+            }
+            
+            .va {
+                vertical-align: top;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h1 class="page-title">Midterm Guestbook</h1>
+        <div class="left">
+            <p>
+                View guestbook signatures.
+            </p>
+            <h:dataTable var="comment" value="#{beanManager.commentList}" rendered="#{beanManager.commentList ne null}" rowClasses="va">
+                <h:column headerClass="header-name">
+                    <c:facet  name="header">
+                        <h:outputText value="NAME" />
+                    </c:facet>
+                    <h:outputText value="#{comment.person.firstName}" />
+                    <h:outputText value=" #{comment.person.middleName}" rendered="#{comment.person.middleName ne null}" />
+                    <h:outputText value=" #{comment.person.lastName}" /><br />
+                    [<h:outputLink styleClass="link-email" value="mailto:#{comment.person.emailAddress}">
+                        <h:outputText value="#{comment.person.emailAddress}" />
+                    </h:outputLink>]
+                </h:column>
+                <h:column>
+                    <c:facet name="header">
+                        <h:outputText value="COMMENT" />
+                    </c:facet>
+                    <h:outputText value="#{comment.comment}" />
+                </h:column>
+                <h:column headerClass="header-date">
+                    <c:facet name="header">
+                        <h:outputText value="POSTED" />
+                    </c:facet>
+                    <h:outputText value="#{comment.createdDate}">
+                        <c:convertDateTime pattern="MMM d, yyyy @ h:mm a" timeZone="EST" />
+                    </h:outputText>
+                </h:column>
+            </h:dataTable>
+        </div>
+        <h:form>
+            <div class="right bl">
+                <p>
+                    Sign the midterm guestbook.<br />
+                    <span class="note"><span class="required">*</span> = required field</span>
+                </p>
+                <h:outputText style="color: #B00;" value="#{beanManager.formReturn}" rendered="#{beanManager.formReturn ne null and !beanManager.status}" />
+                <h:outputText style="color: #090;" value="#{beanManager.formReturn}" rendered="#{beanManager.formReturn ne null and beanManager.status}" />
+                <div class="form-section">
+                    <div class="form-element">
+                        <div class="form-label"><span class="required">*</span><h:outputLabel for="firstName" rendered="true" value="First Name " /></div>
+                        <div class="form-input"><h:inputText id="firstName" required="true" requiredMessage="You must provide a First Name." value="#{beanManager.firstName}" /></div>
+                        <div class="form-error" style="max-width: 105px;"><h:messages for="firstName" style="color: #C00; margin: 0; list-style-type: none;" /></div>
+                    </div>
+                    <div class="form-element">
+                        <div class="form-label"><h:outputLabel for="middleName" rendered="true" value="Middle Name " /></div>
+                        <div class="form-input"><h:inputText id="middleName" required="false" value="#{beanManager.middleName}" /></div>
+                    </div>
+                    <div class="form-element">
+                        <div class="form-label"><span class="required">*</span><h:outputLabel for="lastName" rendered="true" value="Last Name " /></div>
+                        <div class="form-input"><h:inputText id="lastName" required="true" requiredMessage="You must provide an item title." value="#{beanManager.lastName}" /></div>
+                        <div class="form-error" style="max-width: 105px;"><h:messages for="lastName" style="color: #C00; margin: 0; list-style-type: none;" /></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-element">
+                        <div class="form-label"><span class="required">*</span><h:outputLabel for="email" rendered="true" value="Email Address " /></div>
+                        <div class="form-input email">
+                            <h:inputText id="email" required="true" requiredMessage="You must provide an Email Address." validatorMessage="You must enter a valid email addres." value="#{beanManager.email}">
+                                <c:validateRegex for="email" pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"  />
+                            </h:inputText></div>
+                        <div class="form-error"><h:messages for="email" style="color: #C00; margin: 0; list-style-type: none;" /></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-element">
+                        <div class="form-label"><span class="required">*</span><h:outputLabel for="commentBody" rendered="true" value="Comment " /></div>
+                        <div class="form-input"><h:inputTextarea id="commentBody" required="true" requiredMessage="You must enter a comment." value="#{beanManager.commentBody}"  /></div>
+                        <div class="form-error"><h:messages for="commentBody" style="color: #C00; margin: 0; list-style-type: none;" /></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-element">
+                        <h:commandButton action="#{beanManager.createComment}" value="Add comment"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>
+
